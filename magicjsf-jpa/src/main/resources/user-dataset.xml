@@ -1,0 +1,18 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<dataset>
+    <T_USER USR_ID='1' USR_LOGIN='login1' />
+    <T_USER USR_ID='2' USR_LOGIN='login2' />
+    <T_USER USR_ID='3' USR_LOGIN='login3' />
+    <T_USER USR_ID='4' USR_LOGIN='login4' />
+    <T_USER USR_ID='5' USR_LOGIN='login5' />
+    
+    <T_ROLE ROL_ID='1' ROL_NOM="role1"/>
+    <T_ROLE ROL_ID='2' ROL_NOM="role2"/>
+    <T_ROLE ROL_ID='3' ROL_NOM="role3"/>
+    
+    <TJ_USER_ROLE USR_ID="1" ROL_ID="1"/>
+    <TJ_USER_ROLE USR_ID="1" ROL_ID="2"/>
+    <TJ_USER_ROLE USR_ID="1" ROL_ID="3"/>
+    
+    <TJ_USER_ROLE USR_ID="3" ROL_ID="2"/>
+</dataset>

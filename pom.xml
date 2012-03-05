@@ -27,6 +27,8 @@
 		<slf4j.version>1.6.4</slf4j.version>
 		<commons.lang3.version>3.0.1</commons.lang3.version>
 		<junit.version>4.10</junit.version>
+		<dbunit.version>2.4.8</dbunit.version>
+		<derby.version>10.8.2.2</derby.version>
 	</properties>
 	<build>
 		<plugins>
@@ -80,6 +82,22 @@
 				<groupId>org.eclipse.persistence</groupId>
 				<artifactId>eclipselink</artifactId>
 				<version>${eclipselink.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.dbunit</groupId>
+				<artifactId>dbunit</artifactId>
+				<version>${dbunit.version}</version>
+				<exclusions>
+					<exclusion>
+						<artifactId>slf4j-api</artifactId>
+						<groupId>org.slf4j</groupId>
+					</exclusion>
+				</exclusions>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.derby</groupId>
+				<artifactId>derby</artifactId>
+				<version>${derby.version}</version>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>

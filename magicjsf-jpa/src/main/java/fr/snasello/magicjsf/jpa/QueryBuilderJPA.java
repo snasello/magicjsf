@@ -7,6 +7,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.From;
+import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Root;
 import javax.persistence.criteria.Selection;
@@ -15,6 +16,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import fr.snasello.magicjsf.core.annotations.DataPath;
 import fr.snasello.magicjsf.core.annotations.DataRoot;
+import fr.snasello.magicjsf.core.query.DataJoinType;
 import fr.snasello.magicjsf.core.query.QueryBuilder;
 
 public class QueryBuilderJPA<T> implements QueryBuilder<T, QueryCriteriaJPA<T>>{
@@ -28,7 +30,9 @@ public class QueryBuilderJPA<T> implements QueryBuilder<T, QueryCriteriaJPA<T>>{
 	}
 	
 	@Override
-	public QueryCriteriaJPA<T> construct(Class<T> type){
+	public QueryCriteriaJPA<T> construct(
+			Class<T> type){
+		
 		// criteria
 		CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
 		CriteriaQuery<T> criteriaQuery = criteriaBuilder.createQuery(type);
@@ -42,7 +46,7 @@ public class QueryBuilderJPA<T> implements QueryBuilder<T, QueryCriteriaJPA<T>>{
 				String alias = f.getName();
 				DataPath dp = f.getAnnotation(DataPath.class);
 				if(dp != null){
-					Path<?> path = constructPath(root, dp.path());
+					Path<?> path = constructPath(root, dp.path(), dp.joinType());
 					selections.add(path.alias(alias));
 				}
 			}
@@ -60,7 +64,12 @@ public class QueryBuilderJPA<T> implements QueryBuilder<T, QueryCriteriaJPA<T>>{
 		return new QueryCriteriaJPA<T>(criteriaQuery);		
 	}
 	
-	private Path<?> constructPath(Root<?> root, String path) throws SecurityException, NoSuchFieldException{
+	private Path<?> constructPath(
+			Root<?> root, 
+			String path, 
+			DataJoinType joinType) 
+		throws SecurityException, NoSuchFieldException{
+		
 		String[] paths = StringUtils.split(path, '.');
 		if(paths.length == 1){
 			return root.get(path);
@@ -74,17 +83,41 @@ public class QueryBuilderJPA<T> implements QueryBuilder<T, QueryCriteriaJPA<T>>{
 			if(concreteField.isAnnotationPresent(Embedded.class)){
 				lastPath = constructSingularPath(lastFrom, lastPath, pathStr);
 			}else{
-				lastFrom = lastFrom.join(pathStr);
+				JoinType jt = constructJoinType(joinType);
+				if(jt != null){
+					lastFrom = lastFrom.join(pathStr, jt);
+				}else{
+					lastFrom = lastFrom.join(pathStr);
+				}
 			}
 			lastPathType = concreteField.getType();
 		}
 		return constructSingularPath(lastFrom, lastPath, paths[paths.length - 1]);
 	}
 
-	private Path<?> constructSingularPath(From<?,?> from, Path<?> path, String pathStr){
+	private Path<?> constructSingularPath(
+			From<?,?> from, 
+			Path<?> path, 
+			String pathStr){
+		
 		if(path == null){
 			return from.get(pathStr);
 		}
 		return path.get(pathStr);
+	}
+	
+	private JoinType constructJoinType(
+			DataJoinType joinType){
+		
+		switch (joinType) {
+			case INNER:
+				return JoinType.INNER;
+			case LEFT:
+				return JoinType.LEFT;
+			case RIGHT:
+				return JoinType.RIGHT;
+			default:
+				return null;
+		}
 	}
 }

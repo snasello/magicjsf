@@ -9,6 +9,7 @@
 		<module>magicjsf-core</module>
 		<module>magicjsf-jpa</module>
 		<module>magicjsf-test-webapp</module>
+		<module>magicjsf-test-common</module>
 	</modules>
 	<repositories>
 		<repository>
@@ -71,6 +72,11 @@
 			<dependency>
 				<groupId>fr.snasello.magicjsf</groupId>
 				<artifactId>magicjsf-jpa</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>fr.snasello.magicjsf</groupId>
+				<artifactId>magicjsf-test-common</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 			<dependency>

@@ -1,4 +1,4 @@
-package fr.snasello.magicjsf.webapp.model;
+package fr.snasello.magicjsf.common.bo;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -19,6 +19,18 @@ public class User {
 
 	@OneToMany
 	private java.util.Set<Role> roles;
+	
+	public void addRole(Role... rolesToAdd){
+		if(rolesToAdd == null){
+			return;
+		}
+		if(this.roles == null){
+			this.roles = new java.util.HashSet<Role>();
+		}
+		for(Role r : rolesToAdd){
+			this.roles.add(r);
+		}
+	}
 	
 	public static User createUser(String login){
 		User u = new User();

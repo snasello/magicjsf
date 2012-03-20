@@ -4,8 +4,8 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.event.ComponentSystemEvent;
 
-import fr.snasello.magicjsf.webapp.model.UserDTO;
-import fr.snasello.magicjsf.webapp.service.UserService;
+import fr.snasello.magicjsf.common.dto.UserDTO;
+import fr.snasello.magicjsf.common.service.UserService;
 
 @ManagedBean
 @ViewScoped
@@ -16,13 +16,8 @@ public class DataTableBean implements java.io.Serializable{
 	private java.util.List<UserDTO> users;
 	
 	public void init(ComponentSystemEvent event){
-		System.out.println("test");
 		UserService userService = new UserService();
 		this.users = userService.getUsers();
-	}
-	
-	public String getMessage(){
-		return "Hello world!";
 	}
 
 	public java.util.List<UserDTO> getUsers() {

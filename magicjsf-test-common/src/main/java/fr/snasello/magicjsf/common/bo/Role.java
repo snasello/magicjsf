@@ -1,4 +1,4 @@
-package fr.snasello.magicjsf.webapp.model;
+package fr.snasello.magicjsf.common.bo;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;

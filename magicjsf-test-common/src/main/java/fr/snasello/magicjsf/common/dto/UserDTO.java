@@ -3,6 +3,7 @@ package fr.snasello.magicjsf.common.dto;
 import fr.snasello.magicjsf.common.bo.User;
 import fr.snasello.magicjsf.core.annotations.DataPath;
 import fr.snasello.magicjsf.core.annotations.DataRoot;
+import fr.snasello.magicjsf.core.query.OrderType;
 
 @DataRoot(rootClass=User.class)
 public class UserDTO {
@@ -10,7 +11,7 @@ public class UserDTO {
 	@DataPath(path="id")
 	private Long id;
 	
-	@DataPath(path="login")
+	@DataPath(path="login", order=OrderType.ASC)
 	private String login;
 	
 	public UserDTO(Long id, String login){

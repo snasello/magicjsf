@@ -8,6 +8,7 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.From;
 import javax.persistence.criteria.JoinType;
+import javax.persistence.criteria.Order;
 import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Root;
 import javax.persistence.criteria.Selection;
@@ -17,6 +18,7 @@ import org.apache.commons.lang3.StringUtils;
 import fr.snasello.magicjsf.core.annotations.DataPath;
 import fr.snasello.magicjsf.core.annotations.DataRoot;
 import fr.snasello.magicjsf.core.query.DataJoinType;
+import fr.snasello.magicjsf.core.query.OrderType;
 import fr.snasello.magicjsf.core.query.QueryBuilder;
 
 public class QueryBuilderJPA<T> implements QueryBuilder<T, QueryCriteriaJPA<T>>{
@@ -41,13 +43,16 @@ public class QueryBuilderJPA<T> implements QueryBuilder<T, QueryCriteriaJPA<T>>{
 		Root<?> root = criteriaQuery.from(rootAnnotation.rootClass());
 		// ajout de la selection
 		java.util.List<Selection<?>> selections = new java.util.LinkedList<Selection<?>>();
+		// ajout des orderBy
+		java.util.List<Order> orders = new java.util.LinkedList<Order>();
 		try{
 			for(Field f : type.getDeclaredFields()){
 				String alias = f.getName();
 				DataPath dp = f.getAnnotation(DataPath.class);
 				if(dp != null){
-					Path<?> path = constructPath(root, dp.path(), dp.joinType());
+					Path<?> path = constructPath(root, dp.path(), dp.join());
 					selections.add(path.alias(alias));
+					addOrder(orders, criteriaBuilder, path, dp.order());
 				}
 			}
 		} catch (SecurityException e) {
@@ -61,6 +66,7 @@ public class QueryBuilderJPA<T> implements QueryBuilder<T, QueryCriteriaJPA<T>>{
 						selections.toArray(new Selection[selections.size()])
 				)
 		);
+		criteriaQuery.orderBy(orders);
 		return new QueryCriteriaJPA<T>(criteriaQuery);		
 	}
 	
@@ -95,6 +101,22 @@ public class QueryBuilderJPA<T> implements QueryBuilder<T, QueryCriteriaJPA<T>>{
 		return constructSingularPath(lastFrom, lastPath, paths[paths.length - 1]);
 	}
 
+	private void addOrder(
+			java.util.List<Order> orders,
+			CriteriaBuilder criteriaBuilder, 
+			Path<?> path,
+			OrderType orderType){
+		
+		switch (orderType) {
+			case ASC:
+				orders.add(criteriaBuilder.asc(path));
+			case DESC:
+				orders.add(criteriaBuilder.desc(path));
+			default:
+				break;
+		}
+	}
+	
 	private Path<?> constructSingularPath(
 			From<?,?> from, 
 			Path<?> path, 

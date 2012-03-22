@@ -4,19 +4,25 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import fr.snasello.magicjsf.common.bo.Role;
 import fr.snasello.magicjsf.common.bo.User;
 import fr.snasello.magicjsf.common.utils.PU;
 
 public class InitService {
 
+	private final Logger log = LoggerFactory.getLogger(getClass());
+	
 	public void init(){
+		log.debug("init()");
 		EntityManagerFactory factory = Persistence.createEntityManagerFactory(PU.NAME);
 		EntityManager em = factory.createEntityManager();
 		try{
 			initUsers(em);
 		}catch(RuntimeException e){
-			e.printStackTrace();
+			log.error(e.getMessage(), e);
 			em.getTransaction().rollback();
 		}finally{
 			em.close();

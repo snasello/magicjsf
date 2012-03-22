@@ -2,6 +2,7 @@ package fr.snasello.magicjsf.jpa.model;
 
 import fr.snasello.magicjsf.core.annotations.DataPath;
 import fr.snasello.magicjsf.core.annotations.DataRoot;
+import fr.snasello.magicjsf.core.query.OrderType;
 
 @DataRoot(rootClass=User.class)
 public class UserRoleDTO {
@@ -9,10 +10,10 @@ public class UserRoleDTO {
 	@DataPath(path="id")
 	private Long id;
 	
-	@DataPath(path="login")
+	@DataPath(path="login", order=OrderType.ASC)
 	private String login;
 
-	@DataPath(path="roles.nom")
+	@DataPath(path="roles.nom", order=OrderType.ASC)
 	private String roleName;
 	
 	public UserRoleDTO(Long id, String login, String roleName){

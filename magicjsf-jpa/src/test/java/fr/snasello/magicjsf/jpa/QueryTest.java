@@ -22,6 +22,8 @@ import org.junit.Test;
 
 import fr.snasello.magicjsf.core.query.QueryExecutor;
 import fr.snasello.magicjsf.jpa.model.UserDTO;
+import fr.snasello.magicjsf.jpa.model.UserOrderASCDTO;
+import fr.snasello.magicjsf.jpa.model.UserOrderDESCDTO;
 import fr.snasello.magicjsf.jpa.model.UserRoleDTO;
 import fr.snasello.magicjsf.jpa.model.UserRoleLeftDTO;
 
@@ -73,6 +75,36 @@ public class QueryTest {
     }
     
     @Test
+    public void dtoOrderByAscSingleTable(){
+		QueryBuilderJPA<UserOrderASCDTO> qb = new QueryBuilderJPA<UserOrderASCDTO>(em);
+		QueryCriteriaJPA<UserOrderASCDTO> qCriteria = qb.construct(UserOrderASCDTO.class);
+		QueryExecutor<UserOrderASCDTO, QueryPaginationJPA<UserOrderASCDTO>> executor = new QueryExecutorJPA<UserOrderASCDTO>(em);
+		
+		java.util.List<UserOrderASCDTO> dtos = executor.execute(qCriteria).getResult();
+		Assert.assertEquals(5, dtos.size());
+		Assert.assertEquals("login1", dtos.get(0).getLogin());
+		Assert.assertEquals("login2", dtos.get(1).getLogin());
+		Assert.assertEquals("login3", dtos.get(2).getLogin());
+		Assert.assertEquals("login4", dtos.get(3).getLogin());
+		Assert.assertEquals("login5", dtos.get(4).getLogin());
+    }
+    
+    @Test
+    public void dtoOrderByDescSingleTable(){
+		QueryBuilderJPA<UserOrderDESCDTO> qb = new QueryBuilderJPA<UserOrderDESCDTO>(em);
+		QueryCriteriaJPA<UserOrderDESCDTO> qCriteria = qb.construct(UserOrderDESCDTO.class);
+		QueryExecutor<UserOrderDESCDTO, QueryPaginationJPA<UserOrderDESCDTO>> executor = new QueryExecutorJPA<UserOrderDESCDTO>(em);
+		
+		java.util.List<UserOrderDESCDTO> dtos = executor.execute(qCriteria).getResult();
+		Assert.assertEquals(5, dtos.size());
+		Assert.assertEquals("login1", dtos.get(4).getLogin());
+		Assert.assertEquals("login2", dtos.get(3).getLogin());
+		Assert.assertEquals("login3", dtos.get(2).getLogin());
+		Assert.assertEquals("login4", dtos.get(1).getLogin());
+		Assert.assertEquals("login5", dtos.get(0).getLogin());
+    }
+    
+    @Test
     public void dtoJoinLeftTable(){
 		QueryBuilderJPA<UserRoleLeftDTO> qb = new QueryBuilderJPA<UserRoleLeftDTO>(em);
 		QueryCriteriaJPA<UserRoleLeftDTO> qCriteria = qb.construct(UserRoleLeftDTO.class);
@@ -116,11 +148,11 @@ public class QueryTest {
 		Assert.assertEquals("login1", dtos.get(1).getLogin());
 		Assert.assertEquals("role2", dtos.get(1).getRoleName());
 		
-		Assert.assertEquals("login1", dtos.get(3).getLogin());
-		Assert.assertEquals("role3", dtos.get(3).getRoleName());
+		Assert.assertEquals("login1", dtos.get(2).getLogin());
+		Assert.assertEquals("role3", dtos.get(2).getRoleName());
 		
-		Assert.assertEquals("login3", dtos.get(2).getLogin());
-		Assert.assertEquals("role2", dtos.get(2).getRoleName());
+		Assert.assertEquals("login3", dtos.get(3).getLogin());
+		Assert.assertEquals("role2", dtos.get(3).getRoleName());
     }
 }
 
